@@ -60,6 +60,15 @@ mysql -u root -p < database/schema.sql
    ```
    * Frontend will be accessible at: `http://localhost:5173`
 
+### 4. Deploy on Railway
+1. Create a Railway project and deploy this GitHub repository from the `main` branch. Railway will use the root `Dockerfile` to build the frontend and run the API as one service.
+2. Add a MySQL service to the Railway project.
+3. In the app service's Variables, add `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, and `DB_NAME` using the matching MySQL service variables (`MYSQLHOST`, `MYSQLPORT`, `MYSQLUSER`, `MYSQLPASSWORD`, and `MYSQLDATABASE`). Add a unique, long random `JWT_SECRET`. Railway provides `PORT` automatically.
+4. Initialize the database by running `database/schema.sql` against the Railway MySQL database, then optionally run `npm run seed` from `backend/` once to add demo users, clubs, categories, and events.
+5. Set the app service health check path to `/api/health` and generate a public domain.
+
+The backend serves the production frontend and API on the same origin. Keep database credentials and `JWT_SECRET` in Railway Variables; never commit them to GitHub. The seed script may create duplicate events if run more than once.
+
 ---
 
 ## 👥 Default Demo Accounts (from `npm run seed`)

@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const fs = require('fs');
+const path = require('path');
 
 // Load environment variables
 dotenv.config();
@@ -46,6 +48,25 @@ app.use('/api/clubs', clubRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/stats', statsRoutes);
+
+const frontendDistPath = path.join(__dirname, '..', 'frontend', 'dist');
+if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.use((req, res, next) => {
+    if (
+      req.method !== 'GET' ||
+      !req.accepts('html') ||
+      req.path === '/api' ||
+      req.path.startsWith('/api/')
+    ) {
+      return next();
+    }
+
+    res.sendFile(path.join(frontendDistPath, 'index.html'), (error) => {
+      if (error) next(error);
+    });
+  });
+}
 
 // Error Handlers
 app.use(notFoundHandler);
