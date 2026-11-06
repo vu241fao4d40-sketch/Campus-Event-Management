@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+.env.*
+
+# Allow example environment files
+!.env.example
+
+# Build files
+dist/
+
+# Logs
+*.log
+
+# Editor files
+.vscode/
